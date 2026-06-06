@@ -1,0 +1,9 @@
+Mac WeChat Text Exporter DOCX
+
+This project is a small wrapper around wx-cli. It does not include wx-cli code
+or WeChat data.
+
+wx-cli is developed by jackwener and contributors and is licensed under the
+Apache License 2.0:
+https://github.com/jackwener/wx-cli
+

@@ -1,0 +1,23 @@
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Never commit private WeChat data, wx-cli keys, cache, or exports.
+.wx-cli/
+all_keys.json
+config.json
+decrypted/
+cache/
+exports/
+output/
+tmp/
+*.docx
+*.pdf
+*.txt
+!requirements.txt
+*.json
+*.yaml
+*.yml
+.env
