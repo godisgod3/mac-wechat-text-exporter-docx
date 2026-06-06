@@ -58,6 +58,43 @@
 python3 -m pip install -r requirements.txt
 ```
 
+## 最短使用流程
+
+这个项目不是 `wx-cli` 的替代品，而是一个 **DOCX 生成器**：
+
+```text
+Mac 微信本地数据库 -> wx-cli 导出纯文本 -> 本项目生成 DOCX
+```
+
+完整流程如下：
+
+```bash
+# 1. 克隆本项目
+git clone https://github.com/godisgod3/mac-wechat-text-exporter-docx.git
+cd mac-wechat-text-exporter-docx
+
+# 2. 安装 Python 依赖
+python3 -m pip install -r requirements.txt
+
+# 3. 初始化 wx-cli。此步骤只需成功一次，具体权限问题以 wx-cli 官方说明为准。
+npx -y @jackwener/wx-cli init --force
+
+# 4. 确认 wx-cli 能看到你的会话
+npx -y @jackwener/wx-cli sessions
+
+# 5. 导出指定群聊为 DOCX
+python3 scripts/export_chat_docx.py \
+  --chat "这里替换成你的群名" \
+  --output "exports/群聊完整文字记录.docx" \
+  --limit 999999
+```
+
+如果群名比较难匹配，可以先用 `sessions` 找到准确名称：
+
+```bash
+npx -y @jackwener/wx-cli sessions --json
+```
+
 ## 第一步：初始化 wx-cli
 
 请先按 `wx-cli` 官方说明初始化本地数据库读取能力：
@@ -74,6 +111,13 @@ npx -y @jackwener/wx-cli sessions
 ```
 
 如果你是多开微信、改名微信、双开 App，可能需要先让 `wx-cli` 指向正确的数据目录。不要把 `.wx-cli` 配置和密钥提交到仓库。
+
+如果初始化失败，请先看 `wx-cli` 官方 README。常见原因包括：
+
+- 微信没有运行或没有登录。
+- 当前 Mac 权限不足，无法读取微信进程内存。
+- 多开微信时 `wx-cli` 没有指向正确账号目录。
+- 新版微信的本地数据库结构或密钥提取方式发生变化。
 
 ## 第二步：导出指定群为 DOCX
 
@@ -94,6 +138,39 @@ python3 scripts/export_chat_docx.py \
   --chat "群名" \
   --output "exports/group.docx"
 ```
+
+常用参数：
+
+```bash
+# 限定日期范围
+python3 scripts/export_chat_docx.py \
+  --chat "群名" \
+  --since 2024-01-01 \
+  --until 2024-12-31 \
+  --output "exports/2024年群聊记录.docx"
+
+# 同时保留 wx-cli 中间 TXT
+python3 scripts/export_chat_docx.py \
+  --chat "群名" \
+  --keep-txt "exports/group_full.txt" \
+  --output "exports/group.docx"
+```
+
+## 输出文件在哪里
+
+你通过 `--output` 指定 DOCX 路径。例如：
+
+```bash
+--output "exports/群聊完整文字记录.docx"
+```
+
+就会生成：
+
+```text
+exports/群聊完整文字记录.docx
+```
+
+`exports/` 默认被 `.gitignore` 忽略，不会被提交到 GitHub。
 
 ## 用 Codex 半自助操作
 
@@ -130,4 +207,3 @@ DOCX 中的聊天正文格式大致为：
 
 本项目使用 Apache License 2.0。  
 本项目依赖外部工具 `wx-cli`，但不复制或内置 `wx-cli` 源码。`wx-cli` 由其原作者和贡献者维护，许可证同为 Apache License 2.0。
-
